@@ -9,6 +9,8 @@ import Dashboard from "./pages/Dashboard";
 import Cases from "./pages/Cases";
 import LegalAssistant from "./pages/LegalAssistant";
 import Research from "./pages/Research";
+import Backlog from "./pages/Backlog";
+import CaseDetail from "./pages/CaseDetail";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -24,6 +26,8 @@ const App = () => (
           <Route path="/auth" element={<Auth />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/cases" element={<Cases />} />
+          <Route path="/cases/:id" element={<CaseDetail />} />
+          <Route path="/backlog" element={<Backlog />} />
           <Route path="/legal-assistant" element={<LegalAssistant />} />
           <Route path="/research" element={<Research />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
