@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { 
   Scale, FileText, Calendar, TrendingUp, 
   AlertCircle, CheckCircle, Clock, Users,
-  Brain, MessageSquare, FileSearch, LogOut
+  Brain, MessageSquare, FileSearch, LogOut, Inbox
 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -21,6 +21,8 @@ const Dashboard = () => {
     activeCases: 0,
     upcomingHearings: 0,
     pendingDocuments: 0,
+    staleCases: 0,
+    urgentCases: 0,
   });
 
   useEffect(() => {
@@ -63,11 +65,29 @@ const Dashboard = () => {
         .gte("hearing_date", new Date().toISOString())
         .eq("status", "scheduled");
 
+      // Fetch stale and urgent cases
+      const { data: allCasesData } = await supabase
+        .from("cases")
+        .select("status, priority, updated_at, created_at");
+
+      const now = new Date();
+      const staleCases = (allCasesData || []).filter(c => {
+        const lastUpdate = c.updated_at ? new Date(c.updated_at) : new Date(c.created_at || "");
+        const daysSinceUpdate = Math.floor((now.getTime() - lastUpdate.getTime()) / (1000 * 60 * 60 * 24));
+        return daysSinceUpdate > 30 && c.status !== 'closed';
+      });
+
+      const urgentCases = (allCasesData || []).filter(c => 
+        c.priority === 'critical' || c.priority === 'high'
+      );
+
       setStats({
         totalCases: totalCases || 0,
         activeCases: activeCases || 0,
         upcomingHearings: upcomingHearings || 0,
         pendingDocuments: 0,
+        staleCases: staleCases.length,
+        urgentCases: urgentCases.length,
       });
 
     } catch (error) {
@@ -169,22 +189,35 @@ const Dashboard = () => {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => navigate("/cases")}>
             <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium">AI Consultations</CardTitle>
-              <Brain className="h-4 w-4 text-muted-foreground" />
+              <CardTitle className="text-sm font-medium">Urgent Cases</CardTitle>
+              <TrendingUp className="h-4 w-4 text-warning" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-success">Active</div>
+              <div className="text-2xl font-bold text-warning">{stats.urgentCases}</div>
               <p className="text-xs text-muted-foreground mt-1">
-                AI assistant ready
+                High/Critical Priority
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => navigate("/backlog")}>
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium">Stale Cases</CardTitle>
+              <AlertCircle className="h-4 w-4 text-destructive" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-destructive">{stats.staleCases}</div>
+              <p className="text-xs text-muted-foreground mt-1">
+                No Activity 30+ Days
               </p>
             </CardContent>
           </Card>
         </div>
 
         {/* Quick Actions */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <Card className="hover:shadow-lg transition-shadow cursor-pointer border-l-4 border-l-primary"
                 onClick={() => navigate("/cases")}>
             <CardHeader>
@@ -195,6 +228,21 @@ const Dashboard = () => {
                 <div>
                   <CardTitle>Case Management</CardTitle>
                   <CardDescription>View and manage all cases</CardDescription>
+                </div>
+              </div>
+            </CardHeader>
+          </Card>
+
+          <Card className="hover:shadow-lg transition-shadow cursor-pointer border-l-4 border-l-warning"
+                onClick={() => navigate("/backlog")}>
+            <CardHeader>
+              <div className="flex items-center gap-3">
+                <div className="p-3 bg-warning/10 rounded-lg">
+                  <Inbox className="h-6 w-6 text-warning" />
+                </div>
+                <div>
+                  <CardTitle>Case Backlog</CardTitle>
+                  <CardDescription>Manage pending cases</CardDescription>
                 </div>
               </div>
             </CardHeader>

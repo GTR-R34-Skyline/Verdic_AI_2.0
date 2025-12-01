@@ -67,6 +67,57 @@ export type Database = {
           },
         ]
       }
+      case_reassignment_log: {
+        Row: {
+          case_id: string
+          changed_by: string | null
+          created_at: string
+          id: string
+          new_assignee: string | null
+          new_priority: Database["public"]["Enums"]["case_priority"]
+          old_assignee: string | null
+          old_priority: Database["public"]["Enums"]["case_priority"] | null
+          reason: string | null
+        }
+        Insert: {
+          case_id: string
+          changed_by?: string | null
+          created_at?: string
+          id?: string
+          new_assignee?: string | null
+          new_priority: Database["public"]["Enums"]["case_priority"]
+          old_assignee?: string | null
+          old_priority?: Database["public"]["Enums"]["case_priority"] | null
+          reason?: string | null
+        }
+        Update: {
+          case_id?: string
+          changed_by?: string | null
+          created_at?: string
+          id?: string
+          new_assignee?: string | null
+          new_priority?: Database["public"]["Enums"]["case_priority"]
+          old_assignee?: string | null
+          old_priority?: Database["public"]["Enums"]["case_priority"] | null
+          reason?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "case_reassignment_log_case_id_fkey"
+            columns: ["case_id"]
+            isOneToOne: false
+            referencedRelation: "cases"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "case_reassignment_log_changed_by_fkey"
+            columns: ["changed_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       case_schedules: {
         Row: {
           case_id: string
