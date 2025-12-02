@@ -54,11 +54,24 @@ const Navbar = () => {
             ))}
           </div>
 
-          {/* CTA Button */}
-          <div className="hidden md:block">
-            <Button onClick={handleGetStarted} size="sm" className="rounded-full">
-              {isAuthenticated ? "Dashboard" : "Get Started"}
+          {/* CTA Buttons */}
+          <div className="hidden md:flex items-center gap-3">
+            <Button 
+              onClick={handleGetStarted} 
+              variant="ghost"
+              size="sm"
+            >
+              {isAuthenticated ? "Dashboard" : "Login"}
             </Button>
+            {!isAuthenticated && (
+              <Button 
+                onClick={handleGetStarted} 
+                size="sm" 
+                className="rounded-full"
+              >
+                Get Started
+              </Button>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -88,9 +101,14 @@ const Navbar = () => {
                   {link.label}
                 </a>
               ))}
-              <Button onClick={handleGetStarted} size="sm" className="rounded-full w-full">
-                {isAuthenticated ? "Dashboard" : "Get Started"}
+              <Button onClick={handleGetStarted} variant="ghost" size="sm" className="w-full">
+                {isAuthenticated ? "Dashboard" : "Login"}
               </Button>
+              {!isAuthenticated && (
+                <Button onClick={handleGetStarted} size="sm" className="rounded-full w-full">
+                  Get Started
+                </Button>
+              )}
             </div>
           </div>
         )}
