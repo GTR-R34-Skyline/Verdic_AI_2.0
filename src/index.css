@@ -8,54 +8,54 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* Professional Legal Color System */
-    --background: 0 0% 100%;
-    --foreground: 222 47% 11%;
+    /* Modern SaaS Color System - Light & Airy */
+    --background: 210 40% 98%;
+    --foreground: 215 20% 20%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222 47% 11%;
+    --card-foreground: 215 20% 20%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222 47% 11%;
+    --popover-foreground: 215 20% 20%;
 
-    /* Deep navy blue for authority and trust */
-    --primary: 215 45% 25%;
-    --primary-foreground: 210 40% 98%;
-    --primary-hover: 215 45% 20%;
+    /* Sky blue primary for modern, trustworthy feel */
+    --primary: 210 100% 56%;
+    --primary-foreground: 0 0% 100%;
+    --primary-hover: 210 100% 50%;
     
-    /* Amber gold for accents and importance */
-    --accent: 38 92% 50%;
-    --accent-foreground: 222 47% 11%;
-    --accent-hover: 38 92% 45%;
+    /* Warm accent for CTAs and highlights */
+    --accent: 25 95% 53%;
+    --accent-foreground: 0 0% 100%;
+    --accent-hover: 25 95% 48%;
 
-    /* Professional secondary tones */
+    /* Light neutral secondary tones */
     --secondary: 210 20% 94%;
-    --secondary-foreground: 222 47% 11%;
+    --secondary-foreground: 215 20% 20%;
 
     --muted: 210 20% 96%;
-    --muted-foreground: 215 16% 47%;
+    --muted-foreground: 215 15% 50%;
 
     --destructive: 0 84% 60%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive-foreground: 0 0% 100%;
 
-    /* Success for approved/verified items */
-    --success: 142 76% 36%;
+    /* Success for completed cases */
+    --success: 142 76% 45%;
     --success-foreground: 0 0% 100%;
 
     /* Warning for pending items */
     --warning: 38 92% 50%;
-    --warning-foreground: 222 47% 11%;
+    --warning-foreground: 0 0% 100%;
 
     --border: 214 32% 91%;
     --input: 214 32% 91%;
-    --ring: 215 45% 25%;
+    --ring: 210 100% 56%;
 
-    --radius: 0.5rem;
+    --radius: 1rem;
 
-    /* Gradients for visual depth */
-    --gradient-primary: linear-gradient(135deg, hsl(215 45% 25%) 0%, hsl(215 45% 35%) 100%);
-    --gradient-accent: linear-gradient(135deg, hsl(38 92% 50%) 0%, hsl(38 92% 60%) 100%);
-    --gradient-hero: linear-gradient(135deg, hsl(215 45% 25%) 0%, hsl(215 45% 35%) 50%, hsl(38 92% 50%) 100%);
+    /* Sky & warm gradients for hero sections */
+    --gradient-primary: linear-gradient(135deg, hsl(210 100% 56%) 0%, hsl(195 100% 60%) 100%);
+    --gradient-accent: linear-gradient(135deg, hsl(25 95% 53%) 0%, hsl(38 92% 60%) 100%);
+    --gradient-hero: linear-gradient(135deg, hsl(210 100% 96%) 0%, hsl(195 100% 95%) 50%, hsl(0 0% 100%) 100%);
 
     /* Sidebar */
     --sidebar-background: 215 45% 25%;
