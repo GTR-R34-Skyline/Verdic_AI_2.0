@@ -138,64 +138,74 @@ const Index = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-muted">
+    <div className="min-h-screen bg-white">
       <Navbar />
 
-      {/* Hero Section */}
-      <section className="pt-32 pb-20 px-4">
-        <div className="container mx-auto text-center">
-          <Badge className="mb-4 rounded-full" variant="secondary">
-            AI-Powered Legal Management
+      {/* Hero Section - Full viewport, Dreelio-style */}
+      <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden pb-32" style={{ background: 'linear-gradient(135deg, hsl(210 80% 92%) 0%, hsl(25 60% 90%) 50%, hsl(0 0% 98%) 100%)' }}>
+        {/* Law-themed background elements */}
+        <div className="absolute inset-0 opacity-5 pointer-events-none">
+          <div className="absolute top-20 left-10 text-9xl">⚖️</div>
+          <div className="absolute bottom-40 right-20 text-9xl">🏛️</div>
+          <div className="absolute top-1/2 left-1/4 text-7xl">📚</div>
+          <div className="absolute bottom-20 left-1/3 text-6xl">⚖️</div>
+        </div>
+
+        {/* Hero Content */}
+        <div className="container mx-auto px-4 lg:px-8 pt-32 text-center relative z-10 flex-1 flex flex-col items-center justify-center">
+          <Badge className="mb-6 rounded-full px-6 py-2 text-sm font-medium" variant="secondary">
+            AI-Powered Legal Backlog Management
           </Badge>
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+          
+          <h1 className="text-6xl md:text-7xl lg:text-8xl font-bold mb-8 text-foreground leading-tight max-w-5xl mx-auto">
             Solve India's Case Backlog with AI
           </h1>
-          <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-3xl mx-auto">
+          
+          <p className="text-xl md:text-2xl text-muted-foreground mb-12 max-w-3xl mx-auto leading-relaxed">
             Transform your legal workflow with intelligent case management, AI-powered research, and automated prioritization. Justice, delivered faster.
           </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Button size="lg" className="rounded-full px-8" onClick={() => navigate("/auth")}>
+          
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-20">
+            <Button size="lg" className="rounded-full px-8 h-14 text-lg font-semibold shadow-lg hover:shadow-xl transition-all" onClick={() => navigate("/auth")}>
               Get Started Free
               <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
-            <Button size="lg" variant="outline" className="rounded-full px-8" onClick={() => navigate("/dashboard")}>
+            <Button size="lg" variant="outline" className="rounded-full px-8 h-14 text-lg font-semibold border-2" onClick={() => navigate("/dashboard")}>
               View Demo
             </Button>
           </div>
         </div>
-      </section>
 
-      {/* Dashboard Preview Card */}
-      <section className="pb-20 px-4">
-        <div className="container mx-auto">
-          <Card className="shadow-2xl border-2 overflow-hidden">
-            <div className="bg-gradient-to-br from-primary/10 to-accent/10 p-8">
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        {/* Dashboard Preview Card - Overlapping bottom of hero */}
+        <div className="container mx-auto px-4 lg:px-8 relative z-20 -mb-20">
+          <Card className="shadow-2xl border-2 overflow-hidden rounded-2xl max-w-6xl mx-auto">
+            <div className="bg-gradient-to-br from-primary/10 to-accent/10 p-8 lg:p-12">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-6 lg:gap-8">
                 {stats.map((stat, idx) => (
                   <div key={idx} className="text-center">
-                    <stat.icon className="h-8 w-8 mx-auto mb-2 text-primary" />
-                    <div className="text-3xl font-bold text-foreground">{stat.value}</div>
-                    <div className="text-sm text-muted-foreground">{stat.label}</div>
+                    <stat.icon className="h-8 w-8 lg:h-10 lg:w-10 mx-auto mb-3 text-primary" />
+                    <div className="text-3xl lg:text-4xl font-bold text-foreground">{stat.value}</div>
+                    <div className="text-sm lg:text-base text-muted-foreground mt-1">{stat.label}</div>
                   </div>
                 ))}
               </div>
             </div>
-            <CardContent className="p-8">
+            <CardContent className="p-8 lg:p-12 bg-card">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="text-center p-4 bg-success/10 rounded-lg">
-                  <CheckCircle className="h-10 w-10 mx-auto mb-2 text-success" />
-                  <div className="text-2xl font-bold">12,450</div>
-                  <div className="text-sm text-muted-foreground">Cases Resolved</div>
+                <div className="text-center p-6 bg-success/10 rounded-xl transition-all hover:scale-105">
+                  <CheckCircle className="h-10 w-10 lg:h-12 lg:w-12 mx-auto mb-3 text-success" />
+                  <div className="text-2xl lg:text-3xl font-bold">12,450</div>
+                  <div className="text-sm lg:text-base text-muted-foreground mt-1">Cases Resolved</div>
                 </div>
-                <div className="text-center p-4 bg-warning/10 rounded-lg">
-                  <Clock className="h-10 w-10 mx-auto mb-2 text-warning" />
-                  <div className="text-2xl font-bold">3,892</div>
-                  <div className="text-sm text-muted-foreground">In Progress</div>
+                <div className="text-center p-6 bg-warning/10 rounded-xl transition-all hover:scale-105">
+                  <Clock className="h-10 w-10 lg:h-12 lg:w-12 mx-auto mb-3 text-warning" />
+                  <div className="text-2xl lg:text-3xl font-bold">3,892</div>
+                  <div className="text-sm lg:text-base text-muted-foreground mt-1">In Progress</div>
                 </div>
-                <div className="text-center p-4 bg-destructive/10 rounded-lg">
-                  <TrendingUp className="h-10 w-10 mx-auto mb-2 text-destructive" />
-                  <div className="text-2xl font-bold">486</div>
-                  <div className="text-sm text-muted-foreground">High Priority</div>
+                <div className="text-center p-6 bg-destructive/10 rounded-xl transition-all hover:scale-105">
+                  <TrendingUp className="h-10 w-10 lg:h-12 lg:w-12 mx-auto mb-3 text-destructive" />
+                  <div className="text-2xl lg:text-3xl font-bold">486</div>
+                  <div className="text-sm lg:text-base text-muted-foreground mt-1">High Priority</div>
                 </div>
               </div>
             </CardContent>
@@ -203,8 +213,9 @@ const Index = () => {
         </div>
       </section>
 
+
       {/* Work From Anywhere Section */}
-      <section id="benefits" className="py-20 px-4 bg-muted/50">
+      <section id="benefits" className="py-32 px-4 bg-white">
         <div className="container mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
