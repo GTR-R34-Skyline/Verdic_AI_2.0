@@ -12,9 +12,32 @@ serve(async (req) => {
 
   try {
     const { query, precedents } = await req.json();
+    
+    // Input validation
+    if (!query || typeof query !== 'string') {
+      return new Response(
+        JSON.stringify({ error: 'Query is required and must be a string' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    if (query.length > 5000) {
+      return new Response(
+        JSON.stringify({ error: 'Query must be under 5000 characters' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    if (precedents && !Array.isArray(precedents)) {
+      return new Response(
+        JSON.stringify({ error: 'Precedents must be an array' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
 
-    const precedentContext = precedents.length > 0 
+    const precedentContext = precedents && precedents.length > 0
       ? `\n\nRelevant precedents found:\n${precedents.map((p: any) => `- ${p.title} (${p.citation}): ${p.summary}`).join('\n')}`
       : '';
 
@@ -47,7 +70,7 @@ serve(async (req) => {
     });
   } catch (error) {
     console.error('Error:', error);
-    return new Response(JSON.stringify({ error: error instanceof Error ? error.message : 'Unknown error' }), {
+    return new Response(JSON.stringify({ error: 'An error occurred processing your request' }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
