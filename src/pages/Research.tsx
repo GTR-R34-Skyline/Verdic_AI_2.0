@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
+import { validateSearchQuery } from "@/lib/validation";
 
 const Research = () => {
   const navigate = useNavigate();
@@ -21,13 +22,21 @@ const Research = () => {
       return;
     }
 
+    // Validate and sanitize search input
+    const validationResult = validateSearchQuery(searchQuery);
+    if (!validationResult.success) {
+      toast.error(validationResult.error);
+      return;
+    }
+    const sanitizedQuery = validationResult.data as string;
+
     setLoading(true);
     try {
-      // Search in legal precedents
+      // Search in legal precedents with sanitized input
       const { data: precedents, error: precedentsError } = await supabase
         .from("legal_precedents")
         .select("*")
-        .or(`title.ilike.%${searchQuery}%,summary.ilike.%${searchQuery}%,key_principles.cs.{${searchQuery}}`)
+        .or(`title.ilike.%${sanitizedQuery}%,summary.ilike.%${sanitizedQuery}%`)
         .limit(10);
 
       if (precedentsError) throw precedentsError;
