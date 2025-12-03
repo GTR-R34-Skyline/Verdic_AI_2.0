@@ -12,6 +12,29 @@ serve(async (req) => {
 
   try {
     const { query, conversationHistory } = await req.json();
+    
+    // Input validation
+    if (!query || typeof query !== 'string') {
+      return new Response(
+        JSON.stringify({ error: 'Query is required and must be a string' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    if (query.length > 5000) {
+      return new Response(
+        JSON.stringify({ error: 'Query must be under 5000 characters' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    if (conversationHistory && !Array.isArray(conversationHistory)) {
+      return new Response(
+        JSON.stringify({ error: 'Conversation history must be an array' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
 
     const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
@@ -41,7 +64,7 @@ serve(async (req) => {
     });
   } catch (error) {
     console.error('Error:', error);
-    return new Response(JSON.stringify({ error: error instanceof Error ? error.message : 'Unknown error' }), {
+    return new Response(JSON.stringify({ error: 'An error occurred processing your request' }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
