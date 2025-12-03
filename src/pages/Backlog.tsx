@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
+import TextRenderer from "@/components/TextRenderer";
 
 const Backlog = () => {
   const navigate = useNavigate();
@@ -215,7 +216,9 @@ const Backlog = () => {
                         </Badge>
                       )}
                     </div>
-                    <p className="text-sm text-muted-foreground">{caseItem.title}</p>
+                    <p className="text-sm text-muted-foreground">
+                      <TextRenderer text={caseItem.title} />
+                    </p>
                   </div>
                   <div className="flex flex-col gap-2 items-end">
                     <Badge variant="outline" className={getPriorityColor(caseItem.priority)}>

@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { toast } from "sonner";
+import TextRenderer from "@/components/TextRenderer";
 
 interface Message {
   id: string;
@@ -166,7 +167,9 @@ const LegalAssistant = () => {
                           : "bg-muted"
                       }`}
                     >
-                      <p className="whitespace-pre-wrap text-sm">{message.content}</p>
+                      <p className="whitespace-pre-wrap text-sm">
+                        <TextRenderer text={message.content} />
+                      </p>
                     </div>
                     <p className="text-xs text-muted-foreground mt-1">
                       {message.timestamp.toLocaleTimeString()}
