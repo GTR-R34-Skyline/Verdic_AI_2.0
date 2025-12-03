@@ -1,10 +1,10 @@
 project_id = "txshdwrtzqdphvzeudds"
 
 [functions.legal-assistant]
-verify_jwt = false
+verify_jwt = true
 
 [functions.legal-research]
-verify_jwt = false
+verify_jwt = true
 
 [functions.case-precedents]
-verify_jwt = false
+verify_jwt = true
