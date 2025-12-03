@@ -5,6 +5,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import ChatbotEmbed from "@/components/ChatbotEmbed";
+import chatbotConfig from "@/config/chatbot";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -606,6 +608,15 @@ const Index = () => {
       </section>
 
       <Footer />
+      
+      {/* Floating Chatbot Widget */}
+      <ChatbotEmbed 
+        enabled={chatbotConfig.enabled && chatbotConfig.enabledOnHomepage}
+        context={{
+          title: "Verdic AI Homepage",
+          description: "AI-powered legal backlog management platform for Indian courts",
+        }}
+      />
     </div>
   );
 };

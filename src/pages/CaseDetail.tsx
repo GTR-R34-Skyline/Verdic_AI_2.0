@@ -9,6 +9,9 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
+import ChatbotEmbed from "@/components/ChatbotEmbed";
+import TextRenderer from "@/components/TextRenderer";
+import chatbotConfig from "@/config/chatbot";
 
 const CaseDetail = () => {
   const { id } = useParams();
@@ -160,7 +163,9 @@ const CaseDetail = () => {
             <Scale className="h-8 w-8 text-primary" />
             <div>
               <h1 className="text-2xl font-bold text-primary">{caseData.case_number}</h1>
-              <p className="text-xs text-muted-foreground">{caseData.title}</p>
+              <p className="text-xs text-muted-foreground">
+                <TextRenderer text={caseData.title} />
+              </p>
             </div>
           </div>
         </div>
@@ -241,7 +246,9 @@ const CaseDetail = () => {
             {caseData.description && (
               <div>
                 <h4 className="font-semibold text-sm mb-1">Description:</h4>
-                <p className="text-sm text-muted-foreground whitespace-pre-wrap">{caseData.description}</p>
+                <p className="text-sm text-muted-foreground whitespace-pre-wrap">
+                  <TextRenderer text={caseData.description} />
+                </p>
               </div>
             )}
           </CardContent>
@@ -410,6 +417,18 @@ const CaseDetail = () => {
           </Card>
         )}
       </div>
+      
+      {/* Floating Chatbot Widget with case context */}
+      <ChatbotEmbed 
+        enabled={chatbotConfig.enabled && chatbotConfig.enabledOnCaseDetail}
+        caseId={id}
+        context={{
+          title: caseData.title,
+          description: caseData.description,
+          caseType: caseData.case_type,
+          priority: caseData.priority,
+        }}
+      />
     </div>
   );
 };

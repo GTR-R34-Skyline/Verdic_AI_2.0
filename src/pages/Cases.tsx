@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
+import TextRenderer from "@/components/TextRenderer";
 
 const Cases = () => {
   const navigate = useNavigate();
@@ -162,7 +163,9 @@ const Cases = () => {
                   <div className="flex items-start justify-between mb-2">
                     <div>
                       <CardTitle className="text-lg">{caseItem.case_number}</CardTitle>
-                      <CardDescription className="mt-1">{caseItem.title}</CardDescription>
+                      <CardDescription className="mt-1">
+                        <TextRenderer text={caseItem.title} />
+                      </CardDescription>
                     </div>
                     <Badge variant="outline" className={getPriorityColor(caseItem.priority)}>
                       {caseItem.priority}
