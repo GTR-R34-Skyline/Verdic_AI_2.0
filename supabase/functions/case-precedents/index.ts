@@ -22,11 +22,31 @@ serve(async (req) => {
       );
     }
 
-    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-    const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-    const supabase = createClient(supabaseUrl, supabaseKey);
+    // Validate input length to prevent abuse
+    if (typeof caseAbstract !== "string" || caseAbstract.length > 10000) {
+      return new Response(
+        JSON.stringify({ error: "Case abstract must be a string under 10000 characters" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
 
-    // Fetch all other cases with descriptions
+    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+    const supabaseAnonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
+    
+    // Use the user's JWT to respect RLS policies
+    const authHeader = req.headers.get("Authorization");
+    if (!authHeader) {
+      return new Response(
+        JSON.stringify({ error: "Authorization header required" }),
+        { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+      global: { headers: { Authorization: authHeader } },
+    });
+
+    // Fetch cases - RLS policies will be respected
     let query = supabase
       .from("cases")
       .select("id, case_number, title, description, case_type, status, priority, filing_date");
@@ -37,7 +57,10 @@ serve(async (req) => {
     
     const { data: cases, error: casesError } = await query;
 
-    if (casesError) throw casesError;
+    if (casesError) {
+      console.error("Supabase query error:", casesError);
+      throw casesError;
+    }
 
     if (!cases || cases.length === 0) {
       return new Response(
