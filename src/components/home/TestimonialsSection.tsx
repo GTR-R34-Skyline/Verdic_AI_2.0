@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { motion, useInView, AnimatePresence, useScroll, useTransform } from "framer-motion";
+import { motion, useInView, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight, Quote } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -42,14 +42,6 @@ const TestimonialsSection = () => {
   const sectionRef = useRef(null);
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
 
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start end", "end start"],
-  });
-
-  const orbY = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
-  const orbX = useTransform(scrollYProgress, [0, 1], ["0%", "-20%"]);
-
   // Auto-advance carousel
   useEffect(() => {
     const timer = setInterval(() => {
@@ -72,17 +64,14 @@ const TestimonialsSection = () => {
     enter: (direction: number) => ({
       x: direction > 0 ? 300 : -300,
       opacity: 0,
-      scale: 0.9,
     }),
     center: {
       x: 0,
       opacity: 1,
-      scale: 1,
     },
     exit: (direction: number) => ({
       x: direction < 0 ? 300 : -300,
       opacity: 0,
-      scale: 0.9,
     }),
   };
 
@@ -90,71 +79,39 @@ const TestimonialsSection = () => {
     <section id="testimonials" ref={sectionRef} className="relative py-24 lg:py-32 overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0 bg-gradient-hero" />
-      <motion.div 
-        className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[180px]"
-        style={{ y: orbY, x: orbX }}
-      />
-      <motion.div 
-        className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-accent/10 rounded-full blur-[180px]"
-        style={{ y: useTransform(scrollYProgress, [0, 1], ["0%", "-30%"]) }}
-      />
+      <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-[150px]" />
+      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-accent/10 rounded-full blur-[150px]" />
 
       <div className="relative container mx-auto px-4">
         {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: 50 }}
+          initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.8 }}
           className="text-center max-w-3xl mx-auto mb-16"
         >
-          <motion.span 
-            className="inline-block px-4 py-2 rounded-full glass-dark border-neon text-sm text-primary mb-4"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={isInView ? { opacity: 1, scale: 1 } : {}}
-            transition={{ duration: 0.5, delay: 0.1 }}
-          >
+          <span className="inline-block px-4 py-2 rounded-full glass-dark border-neon text-sm text-primary mb-4">
             Testimonials
-          </motion.span>
+          </span>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-display mb-6">
-            <motion.span 
-              className="text-gradient-white block"
-              initial={{ opacity: 0, x: -30 }}
-              animate={isInView ? { opacity: 1, x: 0 } : {}}
-              transition={{ duration: 0.6, delay: 0.2 }}
-            >
-              Trusted by Legal
-            </motion.span>
-            <motion.span 
-              className="text-gradient-neon block"
-              initial={{ opacity: 0, x: 30 }}
-              animate={isInView ? { opacity: 1, x: 0 } : {}}
-              transition={{ duration: 0.6, delay: 0.3 }}
-            >
-              Professionals Nationwide
-            </motion.span>
+            <span className="text-gradient-white">Trusted by Legal</span>
+            <br />
+            <span className="text-gradient-neon">Professionals Nationwide</span>
           </h2>
         </motion.div>
 
         {/* Carousel */}
         <motion.div
-          initial={{ opacity: 0, y: 60, scale: 0.95 }}
-          animate={isInView ? { opacity: 1, y: 0, scale: 1 } : {}}
-          transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+          initial={{ opacity: 0, y: 50 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.8, delay: 0.2 }}
           className="max-w-4xl mx-auto"
         >
-          <motion.div 
-            className="relative glass-dark border-neon rounded-3xl p-8 md:p-12 min-h-[320px]"
-            whileHover={{ boxShadow: "0 0 60px hsl(270 100% 60% / 0.3)" }}
-            transition={{ duration: 0.3 }}
-          >
+          <div className="relative glass-dark border-neon rounded-3xl p-8 md:p-12 min-h-[320px]">
             {/* Quote icon */}
-            <motion.div 
-              className="absolute top-6 left-6 md:top-8 md:left-8"
-              animate={{ rotate: [0, 5, 0], scale: [1, 1.1, 1] }}
-              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-            >
+            <div className="absolute top-6 left-6 md:top-8 md:left-8">
               <Quote className="w-12 h-12 text-primary/30" />
-            </motion.div>
+            </div>
 
             {/* Testimonial content */}
             <div className="relative overflow-hidden">
@@ -166,16 +123,11 @@ const TestimonialsSection = () => {
                   initial="enter"
                   animate="center"
                   exit="exit"
-                  transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                  transition={{ duration: 0.5, ease: "easeInOut" }}
                   className="text-center pt-8"
                 >
                   {/* Avatar */}
-                  <motion.div 
-                    className="mb-6"
-                    initial={{ scale: 0, rotate: -180 }}
-                    animate={{ scale: 1, rotate: 0 }}
-                    transition={{ duration: 0.6, type: "spring" }}
-                  >
+                  <div className="mb-6">
                     <div className="relative inline-block">
                       <div className="w-20 h-20 rounded-full bg-gradient-neon p-0.5">
                         <div className="w-full h-full rounded-full bg-card flex items-center justify-center">
@@ -184,13 +136,9 @@ const TestimonialsSection = () => {
                           </span>
                         </div>
                       </div>
-                      <motion.div 
-                        className="absolute inset-0 bg-primary/30 blur-xl rounded-full"
-                        animate={{ scale: [1, 1.2, 1], opacity: [0.5, 0.8, 0.5] }}
-                        transition={{ duration: 3, repeat: Infinity }}
-                      />
+                      <div className="absolute inset-0 bg-primary/30 blur-xl rounded-full" />
                     </div>
-                  </motion.div>
+                  </div>
 
                   {/* Quote */}
                   <blockquote className="text-lg md:text-xl text-foreground/90 mb-6 leading-relaxed">
@@ -212,49 +160,43 @@ const TestimonialsSection = () => {
 
             {/* Navigation */}
             <div className="flex items-center justify-center gap-4 mt-8">
-              <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  onClick={() => navigate(-1)}
-                  className="rounded-full border-primary/30 hover:bg-primary/10 hover:border-primary"
-                >
-                  <ChevronLeft className="w-5 h-5" />
-                </Button>
-              </motion.div>
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() => navigate(-1)}
+                className="rounded-full border-primary/30 hover:bg-primary/10 hover:border-primary"
+              >
+                <ChevronLeft className="w-5 h-5" />
+              </Button>
 
               {/* Dots */}
               <div className="flex gap-2">
                 {testimonials.map((_, index) => (
-                  <motion.button
+                  <button
                     key={index}
                     onClick={() => {
                       setDirection(index > currentIndex ? 1 : -1);
                       setCurrentIndex(index);
                     }}
-                    className={`h-2 rounded-full transition-all duration-300 ${
+                    className={`w-2 h-2 rounded-full transition-all duration-300 ${
                       index === currentIndex
                         ? "w-8 bg-gradient-neon"
-                        : "w-2 bg-muted-foreground/30 hover:bg-muted-foreground/50"
+                        : "bg-muted-foreground/30 hover:bg-muted-foreground/50"
                     }`}
-                    whileHover={{ scale: 1.2 }}
-                    whileTap={{ scale: 0.9 }}
                   />
                 ))}
               </div>
 
-              <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  onClick={() => navigate(1)}
-                  className="rounded-full border-primary/30 hover:bg-primary/10 hover:border-primary"
-                >
-                  <ChevronRight className="w-5 h-5" />
-                </Button>
-              </motion.div>
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() => navigate(1)}
+                className="rounded-full border-primary/30 hover:bg-primary/10 hover:border-primary"
+              >
+                <ChevronRight className="w-5 h-5" />
+              </Button>
             </div>
-          </motion.div>
+          </div>
         </motion.div>
       </div>
     </section>
