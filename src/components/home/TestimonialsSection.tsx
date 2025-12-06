@@ -1,7 +1,8 @@
-import { useState, useEffect, useRef } from "react";
-import { motion, useInView, AnimatePresence } from "framer-motion";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight, Quote } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import ScrollFadeIn from "./ScrollFadeIn";
 
 const testimonials = [
   {
@@ -39,8 +40,6 @@ const testimonials = [
 const TestimonialsSection = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(0);
-  const sectionRef = useRef(null);
-  const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
 
   // Auto-advance carousel
   useEffect(() => {
@@ -76,7 +75,7 @@ const TestimonialsSection = () => {
   };
 
   return (
-    <section id="testimonials" ref={sectionRef} className="relative py-24 lg:py-32 overflow-hidden">
+    <section id="testimonials" className="relative py-24 lg:py-32 overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0 bg-gradient-hero" />
       <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-[150px]" />
@@ -84,12 +83,7 @@ const TestimonialsSection = () => {
 
       <div className="relative container mx-auto px-4">
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8 }}
-          className="text-center max-w-3xl mx-auto mb-16"
-        >
+        <ScrollFadeIn className="text-center max-w-3xl mx-auto mb-16">
           <span className="inline-block px-4 py-2 rounded-full glass-dark border-neon text-sm text-primary mb-4">
             Testimonials
           </span>
@@ -98,15 +92,10 @@ const TestimonialsSection = () => {
             <br />
             <span className="text-gradient-neon">Professionals Nationwide</span>
           </h2>
-        </motion.div>
+        </ScrollFadeIn>
 
         {/* Carousel */}
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="max-w-4xl mx-auto"
-        >
+        <ScrollFadeIn delay={0.2} className="max-w-4xl mx-auto">
           <div className="relative glass-dark border-neon rounded-3xl p-8 md:p-12 min-h-[320px]">
             {/* Quote icon */}
             <div className="absolute top-6 left-6 md:top-8 md:left-8">
@@ -197,7 +186,7 @@ const TestimonialsSection = () => {
               </Button>
             </div>
           </div>
-        </motion.div>
+        </ScrollFadeIn>
       </div>
     </section>
   );

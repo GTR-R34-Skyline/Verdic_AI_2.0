@@ -1,6 +1,7 @@
 import { useRef, useEffect, useState } from "react";
-import { motion, useInView } from "framer-motion";
+import { useInView } from "framer-motion";
 import { TrendingUp, Users, Clock, Award } from "lucide-react";
+import ScrollFadeIn from "./ScrollFadeIn";
 
 const stats = [
   {
@@ -100,12 +101,7 @@ const StatsSection = () => {
 
       <div className="relative container mx-auto px-4">
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8 }}
-          className="text-center max-w-3xl mx-auto mb-16"
-        >
+        <ScrollFadeIn className="text-center max-w-3xl mx-auto mb-16">
           <span className="inline-block px-4 py-2 rounded-full glass-dark border-neon text-sm text-primary mb-4">
             Impact & Results
           </span>
@@ -118,49 +114,45 @@ const StatsSection = () => {
             India faces one of the world's largest judicial backlogs. 
             Verdic AI is here to change that.
           </p>
-        </motion.div>
+        </ScrollFadeIn>
 
         {/* Stats grid */}
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {stats.map((stat, index) => {
             const Icon = stat.icon;
             return (
-              <motion.div
-                key={stat.label}
-                initial={{ opacity: 0, y: 50 }}
-                animate={isInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                className="group"
-              >
-                <div className="relative h-full glass-dark border-neon rounded-3xl p-6 text-center hover:shadow-neon transition-all duration-500 overflow-hidden">
-                  {/* Gradient background */}
-                  <div className={`absolute inset-0 bg-gradient-to-br ${stat.color} opacity-0 group-hover:opacity-10 transition-opacity duration-500`} />
+              <ScrollFadeIn key={stat.label} delay={index * 0.1}>
+                <div className="group h-full">
+                  <div className="relative h-full glass-dark border-neon rounded-3xl p-6 text-center hover:shadow-neon transition-all duration-500 overflow-hidden">
+                    {/* Gradient background */}
+                    <div className={`absolute inset-0 bg-gradient-to-br ${stat.color} opacity-0 group-hover:opacity-10 transition-opacity duration-500`} />
 
-                  {/* Icon */}
-                  <div className="relative mb-4">
-                    <div className={`inline-flex p-3 rounded-xl bg-gradient-to-br ${stat.color}`}>
-                      <Icon className="w-6 h-6 text-white" />
+                    {/* Icon */}
+                    <div className="relative mb-4">
+                      <div className={`inline-flex p-3 rounded-xl bg-gradient-to-br ${stat.color}`}>
+                        <Icon className="w-6 h-6 text-white" />
+                      </div>
                     </div>
-                  </div>
 
-                  {/* Value */}
-                  <div className="text-4xl lg:text-5xl font-bold text-gradient-neon mb-2">
-                    <AnimatedCounter 
-                      value={stat.value} 
-                      suffix={stat.suffix} 
-                      isInView={isInView} 
-                    />
-                  </div>
+                    {/* Value */}
+                    <div className="text-4xl lg:text-5xl font-bold text-gradient-neon mb-2">
+                      <AnimatedCounter 
+                        value={stat.value} 
+                        suffix={stat.suffix} 
+                        isInView={isInView} 
+                      />
+                    </div>
 
-                  {/* Label */}
-                  <h3 className="text-lg font-semibold text-foreground mb-1">
-                    {stat.label}
-                  </h3>
-                  <p className="text-sm text-muted-foreground">
-                    {stat.description}
-                  </p>
+                    {/* Label */}
+                    <h3 className="text-lg font-semibold text-foreground mb-1">
+                      {stat.label}
+                    </h3>
+                    <p className="text-sm text-muted-foreground">
+                      {stat.description}
+                    </p>
+                  </div>
                 </div>
-              </motion.div>
+              </ScrollFadeIn>
             );
           })}
         </div>
