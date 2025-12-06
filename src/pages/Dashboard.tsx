@@ -2,14 +2,17 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { 
-  Scale, FileText, Calendar, TrendingUp, 
-  AlertCircle, CheckCircle, Clock, Users,
-  Brain, MessageSquare, FileSearch, LogOut, Inbox
+  FileText, Calendar, TrendingUp, 
+  AlertCircle, CheckCircle, Clock,
+  Brain, FileSearch, LogOut, Inbox
 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { DashboardSidebar } from "@/components/dashboard/DashboardSidebar";
+import { ActivityFeed } from "@/components/dashboard/ActivityFeed";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -112,211 +115,225 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="bg-background/80 backdrop-blur-md border-b border-border sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Scale className="h-8 w-8 text-primary" />
-            <div>
-              <h1 className="text-2xl font-bold text-primary">Verdic AI</h1>
-              <p className="text-xs text-muted-foreground">Legal Case Management</p>
+    <SidebarProvider>
+      <div className="min-h-screen flex w-full bg-background">
+        <DashboardSidebar />
+        
+        <div className="flex-1 flex flex-col">
+          {/* Header */}
+          <header className="bg-background/80 backdrop-blur-md border-b border-border sticky top-0 z-50">
+            <div className="px-4 py-4 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <SidebarTrigger />
+                <div>
+                  <h1 className="text-lg font-semibold">Dashboard</h1>
+                </div>
+              </div>
+              
+              <div className="flex items-center gap-4">
+                <div className="text-right hidden sm:block">
+                  <p className="text-sm font-medium">{profile?.full_name}</p>
+                  <p className="text-xs text-muted-foreground">{user?.email}</p>
+                </div>
+                <Button variant="outline" size="sm" onClick={handleLogout}>
+                  <LogOut className="h-4 w-4 mr-2" />
+                  Logout
+                </Button>
+              </div>
+            </div>
+          </header>
+
+          <div className="flex-1 p-6 overflow-auto">
+            {/* Welcome Section */}
+            <div className="mb-8">
+              <h2 className="text-3xl font-bold mb-2">
+                Welcome back, {profile?.full_name || "User"}
+              </h2>
+              <p className="text-muted-foreground">
+                Here's your legal dashboard overview
+              </p>
+            </div>
+
+            {/* Stats Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between pb-2">
+                  <CardTitle className="text-sm font-medium">Total Cases</CardTitle>
+                  <FileText className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">{stats.totalCases}</div>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    All registered
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between pb-2">
+                  <CardTitle className="text-sm font-medium">Active Cases</CardTitle>
+                  <TrendingUp className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold text-warning">{stats.activeCases}</div>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    In progress
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between pb-2">
+                  <CardTitle className="text-sm font-medium">Hearings</CardTitle>
+                  <Calendar className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold text-accent">{stats.upcomingHearings}</div>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Upcoming
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => navigate("/cases")}>
+                <CardHeader className="flex flex-row items-center justify-between pb-2">
+                  <CardTitle className="text-sm font-medium">Urgent</CardTitle>
+                  <TrendingUp className="h-4 w-4 text-warning" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold text-warning">{stats.urgentCases}</div>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    High priority
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => navigate("/backlog")}>
+                <CardHeader className="flex flex-row items-center justify-between pb-2">
+                  <CardTitle className="text-sm font-medium">Stale</CardTitle>
+                  <AlertCircle className="h-4 w-4 text-destructive" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold text-destructive">{stats.staleCases}</div>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    30+ days idle
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              {/* Quick Actions */}
+              <div className="lg:col-span-2 space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <Card className="hover:shadow-lg transition-shadow cursor-pointer border-l-4 border-l-primary"
+                        onClick={() => navigate("/cases")}>
+                    <CardHeader>
+                      <div className="flex items-center gap-3">
+                        <div className="p-3 bg-primary/10 rounded-lg">
+                          <FileText className="h-6 w-6 text-primary" />
+                        </div>
+                        <div>
+                          <CardTitle>Case Management</CardTitle>
+                          <CardDescription>View and manage all cases</CardDescription>
+                        </div>
+                      </div>
+                    </CardHeader>
+                  </Card>
+
+                  <Card className="hover:shadow-lg transition-shadow cursor-pointer border-l-4 border-l-warning"
+                        onClick={() => navigate("/backlog")}>
+                    <CardHeader>
+                      <div className="flex items-center gap-3">
+                        <div className="p-3 bg-warning/10 rounded-lg">
+                          <Inbox className="h-6 w-6 text-warning" />
+                        </div>
+                        <div>
+                          <CardTitle>Case Backlog</CardTitle>
+                          <CardDescription>Manage pending cases</CardDescription>
+                        </div>
+                      </div>
+                    </CardHeader>
+                  </Card>
+
+                  <Card className="hover:shadow-lg transition-shadow cursor-pointer border-l-4 border-l-accent"
+                        onClick={() => navigate("/legal-assistant")}>
+                    <CardHeader>
+                      <div className="flex items-center gap-3">
+                        <div className="p-3 bg-accent/10 rounded-lg">
+                          <Brain className="h-6 w-6 text-accent" />
+                        </div>
+                        <div>
+                          <CardTitle>AI Legal Assistant</CardTitle>
+                          <CardDescription>Get instant legal guidance</CardDescription>
+                        </div>
+                      </div>
+                    </CardHeader>
+                  </Card>
+
+                  <Card className="hover:shadow-lg transition-shadow cursor-pointer border-l-4 border-l-success"
+                        onClick={() => navigate("/research")}>
+                    <CardHeader>
+                      <div className="flex items-center gap-3">
+                        <div className="p-3 bg-success/10 rounded-lg">
+                          <FileSearch className="h-6 w-6 text-success" />
+                        </div>
+                        <div>
+                          <CardTitle>Legal Research</CardTitle>
+                          <CardDescription>Search precedents & case law</CardDescription>
+                        </div>
+                      </div>
+                    </CardHeader>
+                  </Card>
+                </div>
+
+                {/* System Status */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle>System Status</CardTitle>
+                    <CardDescription>All systems operational</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between p-3 bg-success/5 rounded-lg border border-success/20">
+                        <div className="flex items-center gap-3">
+                          <CheckCircle className="h-5 w-5 text-success" />
+                          <div>
+                            <p className="font-medium">AI Services</p>
+                            <p className="text-sm text-muted-foreground">Operational</p>
+                          </div>
+                        </div>
+                        <Badge variant="outline" className="bg-success/10 text-success border-success/20">
+                          Active
+                        </Badge>
+                      </div>
+
+                      <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+                        <div className="flex items-center gap-3">
+                          <Clock className="h-5 w-5 text-muted-foreground" />
+                          <div>
+                            <p className="font-medium">Database</p>
+                            <p className="text-sm text-muted-foreground">Connected</p>
+                          </div>
+                        </div>
+                        <Badge variant="outline">
+                          Healthy
+                        </Badge>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Activity Feed */}
+              <div>
+                <ActivityFeed />
+              </div>
             </div>
           </div>
-          
-          <div className="flex items-center gap-4">
-            <div className="text-right hidden sm:block">
-              <p className="text-sm font-medium">{profile?.full_name}</p>
-              <p className="text-xs text-muted-foreground">{user?.email}</p>
-            </div>
-            <Button variant="outline" size="sm" onClick={handleLogout}>
-              <LogOut className="h-4 w-4 mr-2" />
-              Logout
-            </Button>
-          </div>
         </div>
-      </header>
-
-      <div className="container mx-auto px-4 py-8">
-        {/* Welcome Section */}
-        <div className="mb-8">
-          <h2 className="text-3xl font-bold mb-2">
-            Welcome back, {profile?.full_name || "User"}
-          </h2>
-          <p className="text-muted-foreground">
-            Here's your legal dashboard overview
-          </p>
-        </div>
-
-        {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium">Total Cases</CardTitle>
-              <FileText className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stats.totalCases}</div>
-              <p className="text-xs text-muted-foreground mt-1">
-                All registered cases
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium">Active Cases</CardTitle>
-              <TrendingUp className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-warning">{stats.activeCases}</div>
-              <p className="text-xs text-muted-foreground mt-1">
-                Currently in progress
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium">Upcoming Hearings</CardTitle>
-              <Calendar className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-accent">{stats.upcomingHearings}</div>
-              <p className="text-xs text-muted-foreground mt-1">
-                Scheduled this month
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => navigate("/cases")}>
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium">Urgent Cases</CardTitle>
-              <TrendingUp className="h-4 w-4 text-warning" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-warning">{stats.urgentCases}</div>
-              <p className="text-xs text-muted-foreground mt-1">
-                High/Critical Priority
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => navigate("/backlog")}>
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium">Stale Cases</CardTitle>
-              <AlertCircle className="h-4 w-4 text-destructive" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-destructive">{stats.staleCases}</div>
-              <p className="text-xs text-muted-foreground mt-1">
-                No Activity 30+ Days
-              </p>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Quick Actions */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <Card className="hover:shadow-lg transition-shadow cursor-pointer border-l-4 border-l-primary"
-                onClick={() => navigate("/cases")}>
-            <CardHeader>
-              <div className="flex items-center gap-3">
-                <div className="p-3 bg-primary/10 rounded-lg">
-                  <FileText className="h-6 w-6 text-primary" />
-                </div>
-                <div>
-                  <CardTitle>Case Management</CardTitle>
-                  <CardDescription>View and manage all cases</CardDescription>
-                </div>
-              </div>
-            </CardHeader>
-          </Card>
-
-          <Card className="hover:shadow-lg transition-shadow cursor-pointer border-l-4 border-l-warning"
-                onClick={() => navigate("/backlog")}>
-            <CardHeader>
-              <div className="flex items-center gap-3">
-                <div className="p-3 bg-warning/10 rounded-lg">
-                  <Inbox className="h-6 w-6 text-warning" />
-                </div>
-                <div>
-                  <CardTitle>Case Backlog</CardTitle>
-                  <CardDescription>Manage pending cases</CardDescription>
-                </div>
-              </div>
-            </CardHeader>
-          </Card>
-
-          <Card className="hover:shadow-lg transition-shadow cursor-pointer border-l-4 border-l-accent"
-                onClick={() => navigate("/legal-assistant")}>
-            <CardHeader>
-              <div className="flex items-center gap-3">
-                <div className="p-3 bg-accent/10 rounded-lg">
-                  <Brain className="h-6 w-6 text-accent" />
-                </div>
-                <div>
-                  <CardTitle>AI Legal Assistant</CardTitle>
-                  <CardDescription>Get instant legal guidance</CardDescription>
-                </div>
-              </div>
-            </CardHeader>
-          </Card>
-
-          <Card className="hover:shadow-lg transition-shadow cursor-pointer border-l-4 border-l-success"
-                onClick={() => navigate("/research")}>
-            <CardHeader>
-              <div className="flex items-center gap-3">
-                <div className="p-3 bg-success/10 rounded-lg">
-                  <FileSearch className="h-6 w-6 text-success" />
-                </div>
-                <div>
-                  <CardTitle>Legal Research</CardTitle>
-                  <CardDescription>Search precedents & case law</CardDescription>
-                </div>
-              </div>
-            </CardHeader>
-          </Card>
-        </div>
-
-        {/* Recent Activity */}
-        <Card>
-          <CardHeader>
-            <CardTitle>System Status</CardTitle>
-            <CardDescription>All systems operational</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="flex items-center justify-between p-3 bg-success/5 rounded-lg border border-success/20">
-                <div className="flex items-center gap-3">
-                  <CheckCircle className="h-5 w-5 text-success" />
-                  <div>
-                    <p className="font-medium">AI Services</p>
-                    <p className="text-sm text-muted-foreground">Operational</p>
-                  </div>
-                </div>
-                <Badge variant="outline" className="bg-success/10 text-success border-success/20">
-                  Active
-                </Badge>
-              </div>
-
-              <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
-                <div className="flex items-center gap-3">
-                  <Clock className="h-5 w-5 text-muted-foreground" />
-                  <div>
-                    <p className="font-medium">Database</p>
-                    <p className="text-sm text-muted-foreground">Connected</p>
-                  </div>
-                </div>
-                <Badge variant="outline">
-                  Healthy
-                </Badge>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
       </div>
-    </div>
+    </SidebarProvider>
   );
 };
 
