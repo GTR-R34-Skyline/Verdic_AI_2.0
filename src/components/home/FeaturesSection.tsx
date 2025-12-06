@@ -1,5 +1,4 @@
-import { motion } from "framer-motion";
-import { useInView } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import { 
   Layers, 
@@ -9,6 +8,7 @@ import {
   Shield, 
   Clock 
 } from "lucide-react";
+import ScrollFadeIn from "./ScrollFadeIn";
 
 const features = [
   {
@@ -50,64 +50,48 @@ const features = [
 ];
 
 const FeatureCard = ({ feature, index }: { feature: typeof features[0]; index: number }) => {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
   const Icon = feature.icon;
 
   return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 50 }}
-      animate={isInView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.6, delay: index * 0.1 }}
-      className="group relative"
-    >
-      <div className="relative h-full glass-dark border-neon rounded-3xl p-8 hover:shadow-neon transition-all duration-500 overflow-hidden">
-        {/* Gradient background on hover */}
-        <div className={`absolute inset-0 bg-gradient-to-br ${feature.gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-500`} />
-        
-        {/* Icon */}
-        <div className="relative mb-6">
-          <div className={`inline-flex p-4 rounded-2xl bg-gradient-to-br ${feature.gradient}`}>
-            <Icon className="w-8 h-8 text-white" />
+    <ScrollFadeIn delay={index * 0.1}>
+      <div className="group relative h-full">
+        <div className="relative h-full glass-dark border-neon rounded-3xl p-8 hover:shadow-neon transition-all duration-500 overflow-hidden">
+          {/* Gradient background on hover */}
+          <div className={`absolute inset-0 bg-gradient-to-br ${feature.gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-500`} />
+          
+          {/* Icon */}
+          <div className="relative mb-6">
+            <div className={`inline-flex p-4 rounded-2xl bg-gradient-to-br ${feature.gradient}`}>
+              <Icon className="w-8 h-8 text-white" />
+            </div>
+            <div className={`absolute inset-0 bg-gradient-to-br ${feature.gradient} blur-xl opacity-30 group-hover:opacity-50 transition-opacity`} />
           </div>
-          <div className={`absolute inset-0 bg-gradient-to-br ${feature.gradient} blur-xl opacity-30 group-hover:opacity-50 transition-opacity`} />
+
+          {/* Content */}
+          <h3 className="text-xl font-semibold text-foreground mb-3 group-hover:text-gradient-neon transition-all duration-300">
+            {feature.title}
+          </h3>
+          <p className="text-muted-foreground leading-relaxed">
+            {feature.description}
+          </p>
+
+          {/* Hover line */}
+          <div className={`absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r ${feature.gradient} transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left`} />
         </div>
-
-        {/* Content */}
-        <h3 className="text-xl font-semibold text-foreground mb-3 group-hover:text-gradient-neon transition-all duration-300">
-          {feature.title}
-        </h3>
-        <p className="text-muted-foreground leading-relaxed">
-          {feature.description}
-        </p>
-
-        {/* Hover line */}
-        <div className={`absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r ${feature.gradient} transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left`} />
       </div>
-    </motion.div>
+    </ScrollFadeIn>
   );
 };
 
 const FeaturesSection = () => {
-  const headerRef = useRef(null);
-  const isHeaderInView = useInView(headerRef, { once: true, margin: "-100px" });
-
   return (
     <section id="features" className="relative py-24 lg:py-32 overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0 bg-gradient-hero" />
-      <div className="absolute inset-0 particles-bg" />
 
       <div className="relative container mx-auto px-4">
         {/* Section header */}
-        <motion.div
-          ref={headerRef}
-          initial={{ opacity: 0, y: 30 }}
-          animate={isHeaderInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8 }}
-          className="text-center max-w-3xl mx-auto mb-16"
-        >
+        <ScrollFadeIn className="text-center max-w-3xl mx-auto mb-16">
           <span className="inline-block px-4 py-2 rounded-full glass-dark border-neon text-sm text-primary mb-4">
             Powerful Features
           </span>
@@ -120,7 +104,7 @@ const FeaturesSection = () => {
             Purpose-built tools designed for the unique challenges of India's legal system,
             powered by cutting-edge AI technology.
           </p>
-        </motion.div>
+        </ScrollFadeIn>
 
         {/* Features grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">

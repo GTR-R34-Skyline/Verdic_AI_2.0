@@ -3,6 +3,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { Scale, ArrowRight, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import ParticleBackground from "./ParticleBackground";
 
 const HeroSection = () => {
   const navigate = useNavigate();
@@ -12,7 +13,6 @@ const HeroSection = () => {
     offset: ["start start", "end start"],
   });
 
-  // Simpler parallax transforms
   const y = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
   const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
   const scale = useTransform(scrollYProgress, [0, 0.8], [1, 0.95]);
@@ -25,7 +25,10 @@ const HeroSection = () => {
       {/* Static gradient background */}
       <div className="absolute inset-0 bg-gradient-hero" />
       
-      {/* Subtle animated glow orbs - reduced animation */}
+      {/* Particle background */}
+      <ParticleBackground />
+      
+      {/* Subtle glow orbs */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-40 -left-40 w-[500px] h-[500px] bg-primary/15 rounded-full blur-[150px]" />
         <div className="absolute top-1/2 -right-40 w-[600px] h-[600px] bg-accent/10 rounded-full blur-[180px]" />
@@ -43,7 +46,7 @@ const HeroSection = () => {
         }} />
       </div>
 
-      {/* Floating elements - simplified */}
+      {/* Floating elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <motion.div
           className="absolute top-[20%] left-[10%]"
@@ -164,26 +167,6 @@ const HeroSection = () => {
             ))}
           </motion.div>
         </div>
-      </motion.div>
-
-      {/* Scroll indicator */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2"
-      >
-        <motion.div
-          animate={{ y: [0, 10, 0] }}
-          transition={{ duration: 2, repeat: Infinity }}
-          className="w-6 h-10 rounded-full border-2 border-primary/30 flex items-start justify-center p-2"
-        >
-          <motion.div
-            animate={{ y: [0, 12, 0] }}
-            transition={{ duration: 2, repeat: Infinity }}
-            className="w-1.5 h-1.5 rounded-full bg-primary"
-          />
-        </motion.div>
       </motion.div>
     </section>
   );
