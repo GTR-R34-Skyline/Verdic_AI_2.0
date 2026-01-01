@@ -50,8 +50,8 @@ const Cases = () => {
       filed: "bg-muted",
       under_review: "bg-warning/10 text-warning border-warning/20",
       hearing_scheduled: "bg-accent/10 text-accent border-accent/20",
-      evidence_submission: "bg-blue-100 text-blue-700 border-blue-200",
-      judgment_pending: "bg-purple-100 text-purple-700 border-purple-200",
+      evidence_submission: "bg-blue-500/10 text-blue-500 border-blue-500/20",
+      judgment_pending: "bg-purple-500/10 text-purple-500 border-purple-500/20",
       closed: "bg-success/10 text-success border-success/20",
       appealed: "bg-destructive/10 text-destructive border-destructive/20",
     };
@@ -77,16 +77,16 @@ const Cases = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-muted/30">
+    <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="bg-white border-b">
+      <header className="bg-background/80 backdrop-blur-md border-b border-border sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Button variant="ghost" size="icon" onClick={() => navigate("/dashboard")}>
@@ -94,7 +94,7 @@ const Cases = () => {
             </Button>
             <Scale className="h-8 w-8 text-primary" />
             <div>
-              <h1 className="text-2xl font-bold text-primary">Case Management</h1>
+              <h1 className="text-2xl font-bold text-foreground">Case Management</h1>
               <p className="text-xs text-muted-foreground">{filteredCases.length} cases</p>
             </div>
           </div>
@@ -108,7 +108,7 @@ const Cases = () => {
 
       <div className="container mx-auto px-4 py-8">
         {/* Filters */}
-        <Card className="mb-6">
+        <Card className="mb-6 border-border">
           <CardContent className="pt-6">
             <div className="flex flex-col md:flex-row gap-4">
               <div className="flex-1 relative">
@@ -142,7 +142,7 @@ const Cases = () => {
 
         {/* Cases Grid */}
         {filteredCases.length === 0 ? (
-          <Card>
+          <Card className="border-border">
             <CardContent className="py-12 text-center">
               <p className="text-muted-foreground">No cases found</p>
               <Button className="mt-4" onClick={() => navigate("/cases/new")}>
@@ -156,7 +156,7 @@ const Cases = () => {
             {filteredCases.map((caseItem) => (
               <Card 
                 key={caseItem.id} 
-                className="hover:shadow-lg transition-shadow cursor-pointer"
+                className="hover:shadow-lg transition-shadow cursor-pointer border-border"
                 onClick={() => navigate(`/cases/${caseItem.id}`)}
               >
                 <CardHeader>

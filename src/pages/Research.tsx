@@ -72,9 +72,9 @@ const Research = () => {
   };
 
   return (
-    <div className="min-h-screen bg-muted/30">
+    <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="bg-white border-b">
+      <header className="bg-background/80 backdrop-blur-md border-b border-border sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Button variant="ghost" size="icon" onClick={() => navigate("/dashboard")}>
@@ -82,7 +82,7 @@ const Research = () => {
             </Button>
             <Scale className="h-8 w-8 text-primary" />
             <div>
-              <h1 className="text-2xl font-bold text-primary">Legal Research</h1>
+              <h1 className="text-2xl font-bold text-foreground">Legal Research</h1>
               <p className="text-xs text-muted-foreground">AI-Powered Case Law Search</p>
             </div>
           </div>
@@ -91,7 +91,7 @@ const Research = () => {
 
       <div className="container mx-auto px-4 py-8 max-w-6xl">
         {/* Search Bar */}
-        <Card className="mb-8">
+        <Card className="mb-8 border-border">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <FileSearch className="h-5 w-5" />
@@ -133,7 +133,7 @@ const Research = () => {
 
         {/* AI Insights */}
         {aiInsights && (
-          <Card className="mb-6 border-l-4 border-l-accent">
+          <Card className="mb-6 border-l-4 border-l-accent border-border">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-accent">
                 <BookOpen className="h-5 w-5" />
@@ -153,7 +153,7 @@ const Research = () => {
               Found {results.length} Precedent{results.length !== 1 ? "s" : ""}
             </h2>
             {results.map((precedent) => (
-              <Card key={precedent.id} className="hover:shadow-md transition-shadow">
+              <Card key={precedent.id} className="hover:shadow-md transition-shadow border-border">
                 <CardHeader>
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
@@ -212,7 +212,7 @@ const Research = () => {
 
         {/* Empty State */}
         {!loading && !aiInsights && results.length === 0 && searchQuery && (
-          <Card>
+          <Card className="border-border">
             <CardContent className="py-12 text-center">
               <BookOpen className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
               <p className="text-muted-foreground">

@@ -81,8 +81,8 @@ const Backlog = () => {
       filed: "bg-muted",
       under_review: "bg-warning/10 text-warning border-warning/20",
       hearing_scheduled: "bg-accent/10 text-accent border-accent/20",
-      evidence_submission: "bg-blue-100 text-blue-700 border-blue-200",
-      judgment_pending: "bg-purple-100 text-purple-700 border-purple-200",
+      evidence_submission: "bg-blue-500/10 text-blue-500 border-blue-500/20",
+      judgment_pending: "bg-purple-500/10 text-purple-500 border-purple-500/20",
       closed: "bg-success/10 text-success border-success/20",
       appealed: "bg-destructive/10 text-destructive border-destructive/20",
     };
@@ -91,7 +91,7 @@ const Backlog = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
       </div>
     );
@@ -101,8 +101,8 @@ const Backlog = () => {
   const criticalCases = cases.filter((c) => c.priority === "critical");
 
   return (
-    <div className="min-h-screen bg-muted/30">
-      <header className="bg-white border-b">
+    <div className="min-h-screen bg-background">
+      <header className="bg-background/80 backdrop-blur-md border-b border-border sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Button variant="ghost" size="icon" onClick={() => navigate("/dashboard")}>
@@ -110,7 +110,7 @@ const Backlog = () => {
             </Button>
             <Scale className="h-8 w-8 text-primary" />
             <div>
-              <h1 className="text-2xl font-bold text-primary">Case Backlog Management</h1>
+              <h1 className="text-2xl font-bold text-foreground">Case Backlog Management</h1>
               <p className="text-xs text-muted-foreground">{cases.length} cases in backlog</p>
             </div>
           </div>
@@ -120,7 +120,7 @@ const Backlog = () => {
       <div className="container mx-auto px-4 py-8 max-w-6xl">
         {/* Summary Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-          <Card>
+          <Card className="border-border">
             <CardHeader className="pb-3">
               <CardTitle className="text-sm font-medium">Total Cases</CardTitle>
             </CardHeader>
@@ -129,7 +129,7 @@ const Backlog = () => {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="border-border">
             <CardHeader className="pb-3">
               <CardTitle className="text-sm font-medium flex items-center gap-2">
                 <AlertCircle className="h-4 w-4 text-destructive" />
@@ -141,7 +141,7 @@ const Backlog = () => {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="border-border">
             <CardHeader className="pb-3">
               <CardTitle className="text-sm font-medium flex items-center gap-2">
                 <AlertCircle className="h-4 w-4 text-warning" />
@@ -156,7 +156,7 @@ const Backlog = () => {
         </div>
 
         {/* Filters */}
-        <Card className="mb-6">
+        <Card className="mb-6 border-border">
           <CardContent className="pt-6">
             <div className="flex flex-col md:flex-row gap-4">
               <div className="flex-1">
@@ -200,7 +200,7 @@ const Backlog = () => {
           {cases.map((caseItem) => (
             <Card
               key={caseItem.id}
-              className={`hover:shadow-md transition-shadow cursor-pointer ${
+              className={`hover:shadow-md transition-shadow cursor-pointer border-border ${
                 caseItem.is_stale ? "border-l-4 border-l-warning" : ""
               }`}
               onClick={() => navigate(`/cases/${caseItem.id}`)}
@@ -263,7 +263,7 @@ const Backlog = () => {
           ))}
 
           {cases.length === 0 && (
-            <Card>
+            <Card className="border-border">
               <CardContent className="py-12 text-center">
                 <p className="text-muted-foreground">No cases found in backlog</p>
               </CardContent>
