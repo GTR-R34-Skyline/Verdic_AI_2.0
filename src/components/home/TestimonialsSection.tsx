@@ -2,44 +2,72 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight, Quote } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { supabase } from "@/integrations/supabase/client";
 import ScrollFadeIn from "./ScrollFadeIn";
 
-const testimonials = [
+interface Testimonial {
+  id: string;
+  name: string;
+  role: string;
+  organization: string | null;
+  testimonial_text: string;
+  rating: number | null;
+}
+
+// Fallback testimonials in case database is empty
+const fallbackTestimonials: Testimonial[] = [
   {
+    id: "1",
     name: "Justice Ramesh Kumar",
-    role: "High Court Judge, Delhi",
-    image: "/placeholder.svg",
-    quote: "Verdic AI has revolutionized how we manage our case docket. The AI-powered prioritization has helped us reduce pending cases by 35% in just six months.",
+    role: "High Court Judge",
+    organization: "Delhi High Court",
+    testimonial_text: "Verdic AI has revolutionized how we manage our case docket. The AI-powered prioritization has helped us reduce pending cases by 35% in just six months.",
+    rating: 5,
   },
   {
+    id: "2",
     name: "Advocate Priya Sharma",
-    role: "Senior Counsel, Supreme Court",
-    image: "/placeholder.svg",
-    quote: "The precedent finder is extraordinary. What used to take hours of research now takes minutes. It's like having a team of researchers at my fingertips.",
-  },
-  {
-    name: "Dr. Anil Mehta",
-    role: "Registrar, District Court Mumbai",
-    image: "/placeholder.svg",
-    quote: "Implementation was seamless and the support team is exceptional. Our court efficiency has improved dramatically since adopting Verdic AI.",
-  },
-  {
-    name: "Advocate Sunita Reddy",
-    role: "Legal Aid Counsel, Hyderabad",
-    image: "/placeholder.svg",
-    quote: "For legal aid services, Verdic AI has been transformative. We can now serve more clients effectively and ensure no case falls through the cracks.",
-  },
-  {
-    name: "Justice M.S. Rao",
-    role: "Sessions Court Judge, Bengaluru",
-    image: "/placeholder.svg",
-    quote: "The analytics dashboard provides insights we never had before. We can now predict bottlenecks and allocate resources proactively.",
+    role: "Senior Counsel",
+    organization: "Supreme Court",
+    testimonial_text: "The precedent finder is extraordinary. What used to take hours of research now takes minutes. It's like having a team of researchers at my fingertips.",
+    rating: 5,
   },
 ];
 
 const TestimonialsSection = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(0);
+  const [testimonials, setTestimonials] = useState<Testimonial[]>(fallbackTestimonials);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch testimonials from database
+  useEffect(() => {
+    const fetchTestimonials = async () => {
+      try {
+        const { data, error } = await supabase
+          .from("testimonials")
+          .select("*")
+          .eq("is_featured", true)
+          .order("created_at", { ascending: false })
+          .limit(10);
+
+        if (error) {
+          console.error("Error fetching testimonials:", error);
+          return;
+        }
+
+        if (data && data.length > 0) {
+          setTestimonials(data);
+        }
+      } catch (error) {
+        console.error("Error fetching testimonials:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTestimonials();
+  }, []);
 
   // Auto-advance carousel
   useEffect(() => {
@@ -48,7 +76,7 @@ const TestimonialsSection = () => {
       setCurrentIndex((prev) => (prev + 1) % testimonials.length);
     }, 6000);
     return () => clearInterval(timer);
-  }, []);
+  }, [testimonials.length]);
 
   const navigate = (dir: number) => {
     setDirection(dir);
@@ -73,6 +101,11 @@ const TestimonialsSection = () => {
       opacity: 0,
     }),
   };
+
+  const currentTestimonial = testimonials[currentIndex];
+  const displayRole = currentTestimonial.organization 
+    ? `${currentTestimonial.role}, ${currentTestimonial.organization}`
+    : currentTestimonial.role;
 
   return (
     <section id="testimonials" className="relative py-24 lg:py-32 overflow-hidden">
@@ -121,7 +154,7 @@ const TestimonialsSection = () => {
                       <div className="w-20 h-20 rounded-full bg-gradient-neon p-0.5">
                         <div className="w-full h-full rounded-full bg-card flex items-center justify-center">
                           <span className="text-2xl font-bold text-gradient-neon">
-                            {testimonials[currentIndex].name.charAt(0)}
+                            {currentTestimonial.name.charAt(0)}
                           </span>
                         </div>
                       </div>
@@ -131,16 +164,16 @@ const TestimonialsSection = () => {
 
                   {/* Quote */}
                   <blockquote className="text-lg md:text-xl text-foreground/90 mb-6 leading-relaxed">
-                    "{testimonials[currentIndex].quote}"
+                    "{currentTestimonial.testimonial_text}"
                   </blockquote>
 
                   {/* Author */}
                   <div>
                     <p className="font-semibold text-foreground">
-                      {testimonials[currentIndex].name}
+                      {currentTestimonial.name}
                     </p>
                     <p className="text-sm text-muted-foreground">
-                      {testimonials[currentIndex].role}
+                      {displayRole}
                     </p>
                   </div>
                 </motion.div>

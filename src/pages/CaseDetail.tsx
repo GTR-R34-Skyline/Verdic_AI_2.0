@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { Scale, ArrowLeft, ArrowUp, ArrowDown, FileSearch, Loader2 } from "lucide-react";
+import { Scale, ArrowLeft, ArrowUp, FileSearch, Loader2 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -142,7 +142,7 @@ const CaseDetail = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
       </div>
     );
@@ -153,8 +153,8 @@ const CaseDetail = () => {
   }
 
   return (
-    <div className="min-h-screen bg-muted/30">
-      <header className="bg-white border-b">
+    <div className="min-h-screen bg-background">
+      <header className="bg-background/80 backdrop-blur-md border-b border-border sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Button variant="ghost" size="icon" onClick={() => navigate("/cases")}>
@@ -162,7 +162,7 @@ const CaseDetail = () => {
             </Button>
             <Scale className="h-8 w-8 text-primary" />
             <div>
-              <h1 className="text-2xl font-bold text-primary">{caseData.case_number}</h1>
+              <h1 className="text-2xl font-bold text-foreground">{caseData.case_number}</h1>
               <p className="text-xs text-muted-foreground">
                 <TextRenderer text={caseData.title} />
               </p>
@@ -173,7 +173,7 @@ const CaseDetail = () => {
 
       <div className="container mx-auto px-4 py-8 max-w-6xl">
         {/* Case Details */}
-        <Card className="mb-6">
+        <Card className="mb-6 border-border">
           <CardHeader>
             <div className="flex items-start justify-between">
               <div>
@@ -257,7 +257,7 @@ const CaseDetail = () => {
         {/* Actions */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           {/* Case Reassignment */}
-          <Card>
+          <Card className="border-border">
             <CardHeader>
               <CardTitle className="text-lg">Priority Management</CardTitle>
               <CardDescription>Adjust case priority level</CardDescription>
@@ -331,7 +331,7 @@ const CaseDetail = () => {
           </Card>
 
           {/* Precedent Finding */}
-          <Card>
+          <Card className="border-border">
             <CardHeader>
               <CardTitle className="text-lg">Find Similar Cases</CardTitle>
               <CardDescription>AI-powered precedent discovery</CardDescription>
@@ -356,7 +356,7 @@ const CaseDetail = () => {
 
         {/* Similar Cases Results */}
         {showPrecedents && (
-          <Card>
+          <Card className="border-border">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <FileSearch className="h-5 w-5" />
@@ -379,7 +379,7 @@ const CaseDetail = () => {
                   {precedents.map((precedent, idx) => (
                     <Card
                       key={precedent.id}
-                      className="cursor-pointer hover:shadow-md transition-shadow"
+                      className="cursor-pointer hover:shadow-md transition-shadow border-border"
                       onClick={() => navigate(`/cases/${precedent.id}`)}
                     >
                       <CardContent className="pt-6">

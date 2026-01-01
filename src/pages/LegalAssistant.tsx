@@ -101,9 +101,9 @@ const LegalAssistant = () => {
   };
 
   return (
-    <div className="min-h-screen bg-muted/30 flex flex-col">
+    <div className="min-h-screen bg-background flex flex-col">
       {/* Header */}
-      <header className="bg-white border-b">
+      <header className="bg-background/80 backdrop-blur-md border-b border-border sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Button variant="ghost" size="icon" onClick={() => navigate("/dashboard")}>
@@ -111,7 +111,7 @@ const LegalAssistant = () => {
             </Button>
             <Scale className="h-8 w-8 text-primary" />
             <div>
-              <h1 className="text-2xl font-bold text-primary">AI Legal Assistant</h1>
+              <h1 className="text-2xl font-bold text-foreground">AI Legal Assistant</h1>
               <p className="text-xs text-muted-foreground">Powered by Lovable AI</p>
             </div>
           </div>
@@ -120,8 +120,8 @@ const LegalAssistant = () => {
 
       {/* Chat Container */}
       <div className="flex-1 container mx-auto px-4 py-6 flex flex-col max-w-4xl">
-        <Card className="flex-1 flex flex-col overflow-hidden">
-          <CardHeader className="border-b">
+        <Card className="flex-1 flex flex-col overflow-hidden border-border">
+          <CardHeader className="border-b border-border">
             <CardTitle className="flex items-center gap-2">
               <Bot className="h-5 w-5 text-accent" />
               Virtual Legal Advisor
@@ -194,7 +194,7 @@ const LegalAssistant = () => {
           </ScrollArea>
 
           {/* Input */}
-          <CardContent className="border-t p-4">
+          <CardContent className="border-t border-border p-4">
             <div className="flex gap-2">
               <Input
                 value={input}
