@@ -12,6 +12,8 @@ import LegalAssistant from "./pages/LegalAssistant";
 import Research from "./pages/Research";
 import Backlog from "./pages/Backlog";
 import CaseDetail from "./pages/CaseDetail";
+import RequestRole from "./pages/RequestRole";
+import AdminRoles from "./pages/AdminRoles";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./components/ProtectedRoute";
 
@@ -33,6 +35,8 @@ const App = () => (
           <Route path="/backlog" element={<ProtectedRoute><Backlog /></ProtectedRoute>} />
           <Route path="/legal-assistant" element={<ProtectedRoute><LegalAssistant /></ProtectedRoute>} />
           <Route path="/research" element={<ProtectedRoute><Research /></ProtectedRoute>} />
+          <Route path="/request-role" element={<ProtectedRoute><RequestRole /></ProtectedRoute>} />
+          <Route path="/admin/roles" element={<ProtectedRoute><AdminRoles /></ProtectedRoute>} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
