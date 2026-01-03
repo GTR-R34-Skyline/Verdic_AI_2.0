@@ -7,6 +7,7 @@ import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
 import Cases from "./pages/Cases";
+import NewCase from "./pages/NewCase";
 import LegalAssistant from "./pages/LegalAssistant";
 import Research from "./pages/Research";
 import Backlog from "./pages/Backlog";
@@ -27,6 +28,7 @@ const App = () => (
           <Route path="/auth" element={<Auth />} />
           <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
           <Route path="/cases" element={<ProtectedRoute><Cases /></ProtectedRoute>} />
+          <Route path="/cases/new" element={<ProtectedRoute><NewCase /></ProtectedRoute>} />
           <Route path="/cases/:id" element={<ProtectedRoute><CaseDetail /></ProtectedRoute>} />
           <Route path="/backlog" element={<ProtectedRoute><Backlog /></ProtectedRoute>} />
           <Route path="/legal-assistant" element={<ProtectedRoute><LegalAssistant /></ProtectedRoute>} />
